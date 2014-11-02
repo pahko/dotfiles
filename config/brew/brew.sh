@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# installs and configure brew
-
-ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-brew doctor
-brew install bash-completion
-cat ./autocompletion >> $HOME/.bash_profile
+# installs brew
+if ! type -P 'brew' &>/dev/null; then
+    ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+    brew doctor
+fi
