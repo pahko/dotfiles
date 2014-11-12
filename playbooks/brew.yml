@@ -1,0 +1,58 @@
+---
+- hosts: workstation
+
+  tasks:
+    - name: install brew packages
+      homebrew: name={{item}} state=latest
+      with_items:
+        - coreutils
+        - moreutils
+        - findutils  # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
+        - bash
+        - bash-completion
+        - gnu-sed
+        - wget
+        - vim
+        - ack
+        - git
+        - tree
+        - p7zip
+        - bfg # Install some CTF tools; see https://github.com/ctfs/write-ups
+        - binutils
+        - cifer
+        - dex2jar
+        - dns2tcp
+        - fcrackzip
+        - foremost
+        - hashpump
+        - hydra
+        - john
+        - knock
+        - nmap
+        - pngcheck
+        - socat
+        - sqlmap
+        - tcpflow
+        - tcpreplay
+        - tcptrace
+        - ucspi-tcp # `tcpserver` etc.
+        # - xpdf # XQuartz
+        - xz
+        - cowsay # extra packages
+        - go
+      notify:
+        - create sha256sum bin
+    - name: install grep
+      shell: brew install homebrew/dupes/grep
+    - name: install grep
+      shell: brew install homebrew/dupes/screen
+    - name: install php55
+      shell: brew install homebrew/php/php55
+    - name: install brew cask
+      shell: brew install caskroom/cask/brew-cask
+
+  handlers:
+    - name: create sha256sum bin
+      file: src=/usr/local/bin/gsha256sum dest=/usr/local/bin/sha256sum state=link
+
+

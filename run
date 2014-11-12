@@ -1,0 +1,6 @@
+tell application "Terminal"
+    tell application "System Events"
+        keystroke "t" using {command down}
+    end tell
+    do script "./play-ansible" in selected tab of the front window
+end tell
