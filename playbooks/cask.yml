@@ -1,0 +1,37 @@
+---
+- hosts: workstation
+
+  tasks:
+    - name: install packages with cask
+      homebrew_cask: name={{item}} state=present
+      with_items:
+        - vlc
+        - wunderlist
+        - java
+        - dropbox
+        - google-chrome
+        - subl
+        - virtualbox
+        - vagrant
+        - flux
+        - firefox
+        - utorrent
+        - torbrowser
+        - spotify
+        - spotify-notifications
+        - slack
+        - skype
+        - limechat
+        - adium
+        - caffeine
+        - iterm2
+        - unrarx
+        - xquartz
+
+    - name: install XtraFinder
+      mac_pkg: pkg_name=com.trankynam.xtrafinder.XtraFinder-1.pkg pkg_version=1.0
+               url=http://www.trankynam.com/xtrafinder/downloads/XtraFinder.dmg
+               archive_type=dmg archive_path=XtraFinder.pkg
+      sudo: yes
+    - name: install xpdf  # requires xquartz
+      homebrew: name=xpdf state=latest

@@ -36,12 +36,36 @@
         - tcpreplay
         - tcptrace
         - ucspi-tcp # `tcpserver` etc.
-        # - xpdf # XQuartz
         - xz
         - cowsay # extra packages
         - go
+        - nvm
+        - mysql
       notify:
         - create sha256sum bin
+    - name: nvm dir
+      file: dest=~/.nvm state=directory
+    - name: nvm config
+      lineinfile: dest=~/.bash_profile
+        regexp='^# nvm'
+        line='# nvm'
+        insertafter=EOF
+        state=present
+    - name: nvm source
+      lineinfile: dest=~/.bash_profile
+        regexp='^source '
+        line='source $(brew --prefix nvm)/nvm.sh'
+        insertafter='^# nvm'
+        state=present
+    - name: nvm export
+      lineinfile: dest=~/.bash_profile
+        regexp='^export NVM_DIR=~/.nvm'
+        line='export NVM_DIR=~/.nvm'
+        insertafter='^source '
+        state=present
+    - name: install rvm
+      shell: curl -sSL https://get.rvm.io | bash -s stable
+      shell: source ~/.bash_profile
     - name: install grep
       shell: brew install homebrew/dupes/grep
     - name: install grep
@@ -51,8 +75,20 @@
     - name: install brew cask
       shell: brew install caskroom/cask/brew-cask
 
+    - name: install postgresql
+      homebrew: name=postgresql state=latest
+    - name: create LaunchAgents dir
+      file: dest=~/Library/LaunchAgents state=directory
+    - name: symlink postgresql.plist
+      file: src=/usr/local/opt/postgresql/homebrew.mxcl.postgresql.plist dest=~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist state=link
+    - name:
+      shell: launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+    - name: drop user pahko
+      shell: psql -d template1 -c "DROP ROLE IF EXISTS pahko;"
+    - name: create pahko user
+      shell: psql -d template1 -c "CREATE ROLE pahko;"
+
   handlers:
     - name: create sha256sum bin
       file: src=/usr/local/bin/gsha256sum dest=/usr/local/bin/sha256sum state=link
-
 
