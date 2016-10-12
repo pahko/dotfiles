@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
-# install brew and brew packages
-source ./brew.sh
+# install and configure everything
+for package in 'osx_defaults.sh brew.sh'; do
+    ./$package
+    [[ "$?" == "0" ]] && exit 1
+done
+
+source "$HOME/.bash_profile"
